@@ -1,12 +1,17 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { addTodo, removeTodo } from './redux/slices/todoSlice'
 import { FaPlus, FaTrash } from 'react-icons/fa6'
 
 const App = () => {
-  const [inputValue, setInputValue] = useState('')
+  const [inputValue, setInputValue] = useState("")
   const todos = useSelector(state => state.todos)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    const savedTodos = JSON.parse(localStorage.getItem('todos')) || []
+    savedTodos.forEach(todo => dispatch(addTodo(todo)))
+  }, [dispatch])
 
   const handleAddTodo = () => {
     if (inputValue.trim()) {
@@ -19,14 +24,18 @@ const App = () => {
     dispatch(removeTodo(index))
   }
 
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos))
+  }, [todos])
+
   return (
-    <div className='w-[500px] h-auto rounded-[20px] bg-neutral-100 m-auto mt-25 border-2 border-[#9448db] p-5'>
-      <h1 className='text-4xl font-bold text-[#9448db] mt-2.5'>Todo App</h1>
-      <h3 className='text-xl font-bold text-[#9448db] mt-5'>New Todo</h3>
+    <div className='w-[400px] h-auto rounded-[20px] bg-neutral-100 m-auto mt-25 border-2 border-[#3d6ff6] p-5'>
+      <h1 className='text-4xl font-bold text-[#3d6ff6] mt-2.5'>Todo App</h1>
+      <h3 className='text-xl font-bold text-[#3d6ff6] mt-5'>New Todo</h3>
       <div className='flex gap-3.75 mt-5'>
         <input
           className='w-[400px] h-[45px] rounded-[15px] pl-5 outline-none
-           border-2 border-[#9448db] text-[16px] font-bold text-[#9448db] placeholder:text-[#9448db]'
+           border-2 border-[#3d6ff6] text-[16px] font-bold text-[#3d6ff6] placeholder:text-[#3d6ff6]'
           type='text'
           placeholder='Add new todo here'
           value={inputValue}
@@ -34,8 +43,8 @@ const App = () => {
         />
         <button
           onClick={handleAddTodo}
-          className='w-11.25 h-11.25 cursor-pointer
-         rounded-[15px] bg-[#9448db] flex items-center justify-center'
+          className='w-15 h-11 cursor-pointer
+         rounded-[15px] bg-[#3d6ff6] flex items-center justify-center'
         >
           <FaPlus className='text-white w-6 h-6' />
         </button>
@@ -44,19 +53,19 @@ const App = () => {
         {todos.map((todo, index) => (
           <div
             key={index}
-            className='flex justify-between items-center  mt-[20px] bg-pink-100  w-[460px] h-[45px] rounded-[15px]'
+            className='flex justify-between items-center  mt-[20px] bg-[#c9d7fe]  w-[360px] h-[45px] rounded-[15px]'
           >
-            <span className='text-[#9448db] font-bold pl-5'>{todo}</span>
+            <span className='text-[#3d6ff6] font-bold pl-5'>{todo}</span>
             <button
               onClick={() => handleDeleteTodo(index)}
-              className='text-[#9448db]  cursor-pointer pr-3.75'
+              className='text-[#3d6ff6]  cursor-pointer pr-3.75'
             >
               <FaTrash />
             </button>
           </div>
         ))}
       </div>
-      <h3 className='text-xl font-bold text-[#9448db] mt-10'>
+      <h3 className='text-[18px] font-bold text-[#3d6ff6] mt-10'>
         There is 2 pending tasks
       </h3>
     </div>
